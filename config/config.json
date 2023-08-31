@@ -1,0 +1,18 @@
+{
+    "game": {
+      "screen_width": 640,
+      "screen_height": 480,
+      "BLOCK_SIZE": 20,
+      "SPEED": 20,
+      "level": {
+        "easy":10,
+        "medium":20,
+        "hard":30
+      }
+    },
+    "ranking":{
+      "adress":"mongodb://localhost:27017/",
+      "database":"snake_db",
+      "collection":"ranking"
+    }
+}
