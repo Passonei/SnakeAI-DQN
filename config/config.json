@@ -14,5 +14,10 @@
       "adress":"mongodb://localhost:27017/",
       "database":"snake_db",
       "collection":"ranking"
+    },
+    "agent":{
+      "path":"models/score67.h5",
+      "epsilon_train":0.9,
+      "epsilon_play":0.01
     }
 }

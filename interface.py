@@ -18,16 +18,19 @@ class Interface:
 
     def menu(self):
         play_button = self.font.render("Play", True, (255, 255, 255))
-        play_button_rect = play_button.get_rect(center=(self.screen_width // 2, self.screen_height // 2 - 50))
+        play_button_rect = play_button.get_rect(center=(self.screen_width//2, self.screen_height//2-100))
+
+        agent_button = self.font.render("Agent", True, (255, 255, 255))
+        agent_button_rect = agent_button.get_rect(center=(self.screen_width//2, self.screen_height//2-50))
 
         ranking_button = self.font.render("Ranking", True, (255, 255, 255))
-        ranking_button_rect = ranking_button.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
+        ranking_button_rect = ranking_button.get_rect(center=(self.screen_width//2, self.screen_height//2))
 
         settings_button = self.font.render("Settings", True, (255, 255, 255))
-        settings_button_rect = settings_button.get_rect(center=(self.screen_width // 2, self.screen_height // 2 + 50))
+        settings_button_rect = settings_button.get_rect(center=(self.screen_width//2, self.screen_height//2+50))
 
         exit_button = self.font.render("Exit", True, (255, 255, 255))
-        exit_button_rect = exit_button.get_rect(center=(self.screen_width // 2, self.screen_height // 2 + 100))
+        exit_button_rect = exit_button.get_rect(center=(self.screen_width//2, self.screen_height//2+100))
         
         while True:
             for event in pygame.event.get():
@@ -36,6 +39,8 @@ class Interface:
                 elif event.type == MOUSEBUTTONDOWN:
                     if play_button_rect.collidepoint(event.pos):
                         return "play"
+                    elif agent_button_rect.collidepoint(event.pos):
+                        return "agent"
                     elif ranking_button_rect.collidepoint(event.pos):
                         return "ranking"
                     elif settings_button_rect.collidepoint(event.pos):
@@ -46,6 +51,7 @@ class Interface:
             self.screen.fill((0, 0, 0))
             
             self.screen.blit(play_button, play_button_rect)
+            self.screen.blit(agent_button, agent_button_rect)
             self.screen.blit(ranking_button, ranking_button_rect)
             self.screen.blit(settings_button, settings_button_rect)
             self.screen.blit(exit_button, exit_button_rect)
@@ -57,16 +63,16 @@ class Interface:
     
     def settings(self):
         easy_button = self.font.render("Easy", True, (0, 255, 0))
-        easy_button_rect = easy_button.get_rect(center=(self.screen_width // 2-150, self.screen_height // 2 + 50))
+        easy_button_rect = easy_button.get_rect(center=(self.screen_width//2-150, self.screen_height//2+50))
 
         medium_button = self.font.render("Medium", True, (255, 255, 0))
-        medium_button_rect = medium_button.get_rect(center=(self.screen_width // 2, self.screen_height // 2 + 50))
+        medium_button_rect = medium_button.get_rect(center=(self.screen_width//2, self.screen_height//2 +50))
 
         hard_button = self.font.render("Hard", True, (255, 0, 0))
-        hard_button_rect = hard_button.get_rect(center=(self.screen_width // 2+150, self.screen_height // 2 + 50))
+        hard_button_rect = hard_button.get_rect(center=(self.screen_width//2+150, self.screen_height//2 +50))
         
         end_game_text = self.font.render("DIFFICULTY LEVEL", True, (255, 255, 255))
-        end_game_rect = end_game_text.get_rect(center=(self.screen_width // 2, self.screen_height // 2 - 50))
+        end_game_rect = end_game_text.get_rect(center=(self.screen_width//2, self.screen_height//2-50))
 
         while True:
             for event in pygame.event.get():
@@ -92,13 +98,13 @@ class Interface:
     
     def ranking(self, ranking_list):
         ranking_text = self.font.render("RANKING", True, (255, 255, 255))
-        ranking_rect = ranking_text.get_rect(center=(self.screen_width // 2, 50))
+        ranking_rect = ranking_text.get_rect(center=(self.screen_width//2, 50))
 
         back_button = self.font.render("Back", True, (255, 255, 255))
-        back_button_rect = back_button.get_rect(center=(self.screen_width // 2 + 50, self.screen_height - 50))
+        back_button_rect = back_button.get_rect(center=(self.screen_width //2+50, self.screen_height-50))
 
         reset_button = self.font.render("Reset", True, (255, 255, 255))
-        reset_button_rect = reset_button.get_rect(center=(self.screen_width // 2 - 100, self.screen_height - 50))
+        reset_button_rect = reset_button.get_rect(center=(self.screen_width//2-100, self.screen_height-50))
         empty = True
         while True:
             for event in pygame.event.get():
@@ -129,23 +135,32 @@ class Interface:
                 pygame.display.flip()
             self.clock.tick(30)
     
-    def end_game(self, score):
+    def end_game(self, score, human):
         play_button = self.font.render("Play again", True, (255, 255, 255))
-        play_button_rect = play_button.get_rect(center=(self.screen_width // 2, self.screen_height // 2+100))
+        play_button_rect = play_button.get_rect(center=(self.screen_width//2, 
+                                                        self.screen_height//2+100))
 
         menu_button = self.font.render("Menu", True, (255, 255, 255))
-        menu_button_rect = menu_button.get_rect(center=(self.screen_width//2, self.screen_height//2+150))
+        menu_button_rect = menu_button.get_rect(center=(self.screen_width//2, 
+                                                        self.screen_height//2+150))
 
         end_game_text = self.font.render("END GAME", True, (255, 0, 0))
-        end_game_rect = end_game_text.get_rect(center=(self.screen_width//2, self.screen_height//2-100))
+        end_game_rect = end_game_text.get_rect(center=(self.screen_width//2, 
+                                                        self.screen_height//2-100))
 
-        score_text = self.font.render(f"Your Score: {score}", True, (255, 0, 0))
+
+        if human:
+            name = self.input_text
+            name_text = self.font.render("Enter your name:", True, (255, 255, 255))
+            name_rect = name_text.get_rect(center=(self.screen_width//2, self.screen_height//2))
+            name_input_rect = pygame.Rect(self.screen_width//3, self.screen_height//2+20, self.screen_width//3, 40)
+            input_font = pygame.font.Font(None, 32)
+            score_text = self.font.render(f"Your Score: {score}", True, (255, 0, 0))
+        else: 
+            score_text = self.font.render(f"Agent Score: {score}", True, (255, 0, 0))
+            name = 'Agent Deep Q-learning'
+
         score_rect = score_text.get_rect(center=(self.screen_width//2, self.screen_height//2-50))
-
-        name_text = self.font.render("Enter your name:", True, (255, 255, 255))
-        name_rect = name_text.get_rect(center=(self.screen_width//2, self.screen_height//2))
-        name_input_rect = pygame.Rect(self.screen_width//3, self.screen_height//2+20, self.screen_width//3, 40)
-        input_font = pygame.font.Font(None, 32)
 
         running = True
         while running:
@@ -154,13 +169,12 @@ class Interface:
                     running = False
                 elif event.type == MOUSEBUTTONDOWN:
                     if play_button_rect.collidepoint(event.pos):
-                        return "play", self.input_text
+                        return "play", name
                     elif menu_button_rect.collidepoint(event.pos):
-                        return "menu", self.input_text
-                elif event.type == pygame.KEYDOWN:
+                        return "menu", name
+                elif event.type == pygame.KEYDOWN and human:
                     if event.key == pygame.K_RETURN:
                         entered_name = self.input_text
-                        print(f"Entered Name: {entered_name}")
                     elif event.key == pygame.K_BACKSPACE:
                         self.input_text = self.input_text[:-1]
                     else:
@@ -172,13 +186,12 @@ class Interface:
             self.screen.blit(score_text, score_rect)            
             self.screen.blit(play_button, play_button_rect)
             self.screen.blit(menu_button, menu_button_rect)
-            self.screen.blit(name_text, name_rect)
             
-            pygame.draw.rect(self.screen, (255, 255, 255), name_input_rect, 2)
-            input_surface = input_font.render(self.input_text, True, (255, 255, 255))
-            self.screen.blit(input_surface, (name_input_rect.x + 5, name_input_rect.y + 5))
-
-
+            if human:
+                self.screen.blit(name_text, name_rect)  
+                pygame.draw.rect(self.screen, (255, 255, 255), name_input_rect, 2)
+                input_surface = input_font.render(self.input_text, True, (255, 255, 255))
+                self.screen.blit(input_surface, (name_input_rect.x + 5, name_input_rect.y + 5))
 
             pygame.display.flip()
             self.clock.tick(30)

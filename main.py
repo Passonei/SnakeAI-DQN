@@ -1,5 +1,6 @@
 from snake_game import Snake
 from interface import Interface
+from agent_DQL import Q_agent
 from datetime import datetime
 import pymongo
 import json
@@ -27,11 +28,13 @@ def save_score(name, score):
 
 def human_play():
     game.reset()
-
+    human = True
+    game.play_step(human=human)
+    game.clock.tick(1)
     while True:
-        game_over, score = game.play_step()
+        _, game_over, score = game.play_step(human=human)
         if game_over == True:
-            button, name = interface.end_game(score)
+            button, name = interface.end_game(score, human)
             save_score(name, score)
 
             if button == 'play':
@@ -39,10 +42,34 @@ def human_play():
             elif button == 'menu':
                 run_menu()
 
+def agent_play():
+    game.reset()
+
+    agent = Q_agent()
+    agent.load_model(config_agent['path'])
+    agent.epsilon=config_agent['epsilon_play']
+    human=False
+
+    while True:
+        state = game.get_state()
+        move = agent.decision(state)
+        reward, game_over, score = game.play_step(human=human, action=move)
+
+        if game_over == True:
+            button, name = interface.end_game(score,human)
+            save_score(name, score)
+
+            if button == 'play':
+                agent_play()
+            elif button == 'menu':
+                run_menu()
+
 def run_menu():
     button = interface.menu()
     if button == 'play':
         human_play()
+    elif button == 'agent':
+        agent_play()
     elif button == 'ranking':
         ranking_list = scores_collection.find().sort("score", pymongo.DESCENDING).limit(5)
         button = interface.ranking(ranking_list)
@@ -60,6 +87,7 @@ if __name__ == '__main__':
     config = load_config()
     config_game = config['game']
     config_ranking = config['ranking']
+    config_agent = config['agent']
 
     interface = Interface(width=config_game['screen_width'],
                         height=config_game['screen_height'])
@@ -74,5 +102,3 @@ if __name__ == '__main__':
     scores_collection = database[config_ranking['collection']]
 
     run_menu()
-
-# jesli agent to automatycznie czyta nazwe i po grze zapisuje do bazy danych
