@@ -28,7 +28,8 @@ first the agent learns about the goal of the game and the rules of moving in the
 Rewards:
 - snake eats food: reward = 10
 - snake hits a boundary or itself: reward = -10
-- regular movement: reward = 0  
+- regular movement: reward = 0
+  
 The second stage begins when the score = 20 this stage is to speed up the training process, now the agent knows how to move in the environment so the agent is only trained when it eats food or hits something.
 
   <p align="center">
