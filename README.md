@@ -34,5 +34,5 @@ The second stage begins when the score = 20 this stage is to speed up the traini
   <p align="center">
   <b> Deep Q-learning agent after training <b/>   
   
-  ![](https://github.com/Passonei/SnakeAI_DQL/blob/main/gifs/SnakeAgentDQL.gif)  
+  ![](gifs/SnakeAgentDQL.gif)  
   </p>
