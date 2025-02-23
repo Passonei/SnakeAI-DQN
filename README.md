@@ -19,7 +19,7 @@ This will start the game interface, allowing you to interact with the game.
 To train an agent from scratch, use the following command:
 
 ```bash
-python train_agent.py
+python -m src.agents.agent_trainer.DQL_agent_trainer
 ```
 Running this command will initiate the agent training process, starting from scratch.
 
