@@ -1,5 +1,5 @@
 from datetime import datetime
-from utils import open_json, save_json
+from src.utils.utils import open_json, save_json
 
 
 class Ranking:

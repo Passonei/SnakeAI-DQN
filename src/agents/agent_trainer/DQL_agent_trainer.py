@@ -2,9 +2,9 @@ import pygame
 import numpy as np
 from collections import deque
 
-from snake_game import Snake
-from agents.agent_DQL import DQL_agent
-from utils import open_json, logger_setup
+from src.snake_game import Snake
+from src.agents.agent_DQL import DQL_agent
+from src.utils.utils import open_json, logger_setup
 
 
 class Trainer:
@@ -134,7 +134,7 @@ class Trainer:
 
 
 if __name__ == "__main__":
-    config = open_json("agents/agent_trainer/train_config.json")
+    config = open_json("config/train_config.json")
     pygame.init()
     trainer = Trainer(**config)
     trainer.train()

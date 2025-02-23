@@ -1,8 +1,8 @@
-from snake_game import Snake
-from interface import Interface
-from agents.agent_DQL import DQL_agent
-from ranking.ranking import Ranking
-from utils import open_json
+from src.snake_game import Snake
+from src.interface import Interface
+from src.agents.agent_DQL import DQL_agent
+from src.ranking.ranking import Ranking
+from src.utils.utils import open_json
 
 
 def human_play():

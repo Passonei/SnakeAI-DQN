@@ -11,7 +11,7 @@
       }
     },
     "ranking":{
-      "path": "ranking/ranking.json",
+      "path": "src/ranking/ranking.json",
       "max_size": 5
     },
     "agent": {
