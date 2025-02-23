@@ -3,18 +3,17 @@ import json
 import logging
 
 
-def open_json(file_path):
+def open_json(file_path: str) -> dict:
     with open(file_path) as file:
         return json.load(file)
 
 
-def save_json(file_path, data):
+def save_json(file_path: str, data: dict) -> None:
     with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
 
 
-def logger_setup(level, app):
-    """Set up the logger."""
+def logger_setup(level: str, app: str) -> logging.Logger:
     if not os.path.exists("logs"):
         os.makedirs("logs")
 
