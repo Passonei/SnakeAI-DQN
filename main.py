@@ -1,30 +1,9 @@
 from snake_game import Snake
 from interface import Interface
-from agent_DQL import Q_agent
-from datetime import datetime
-import pymongo
-import json
+from agents.agent_DQL import DQL_agent
+from ranking.ranking import Ranking
+from utils import open_json
 
-def load_config():
-    config = None
-    try:
-        file = open('config/config.json')
-        config = json.load(file)
-        file.close()
-    except Exception as e:
-        print(e)
-    finally:
-        return config
-
-def save_score(name, score):
-    if name == "":
-        name = "unknown"
-    score_data = {
-        "name": name,
-        "score": score,
-        "date": datetime.now().strftime("%d/%m/%Y")
-    }
-    scores_collection.insert_one(score_data)
 
 def human_play():
     game.reset()
@@ -32,73 +11,81 @@ def human_play():
     game.play_step(human=human)
     game.clock.tick(1)
     while True:
-        _, game_over, score = game.play_step(human=human)
-        if game_over == True:
-            button, name = interface.end_game(score, human)
-            save_score(name, score)
+        play_game(human, None)
 
-            if button == 'play':
-                human_play()
-            elif button == 'menu':
-                run_menu()
 
 def agent_play():
     game.reset()
 
-    agent = Q_agent()
-    agent.load_model(config_agent['path'])
-    agent.epsilon=config_agent['epsilon_play']
-    human=False
+    agent = DQL_agent(learning_rate=0.001,
+                      epsilon=0.9,
+                      epsilon_decay=0.997,
+                      epsilon_min=0.01,
+                      discount_rate=0.9
+                      )
+    agent.load_model(config_agent["path"])
+    agent.epsilon = config_agent["epsilon_play"]
+    human = False
 
     while True:
         state = game.get_state()
         move = agent.decision(state)
-        reward, game_over, score = game.play_step(human=human, action=move)
+        play_game(human, move)
 
-        if game_over == True:
-            button, name = interface.end_game(score,human)
-            save_score(name, score)
 
-            if button == 'play':
-                agent_play()
-            elif button == 'menu':
-                run_menu()
+def play_game(human, move):
+    _, game_over, score = game.play_step(human=human, action=move)
+    if game_over:
+        button, name = interface.end_game(score, human)
+
+        ranking.add_score(name, score)
+
+        if button == "play":
+            agent_play()
+        elif button == "menu":
+            run_menu()
+
 
 def run_menu():
     button = interface.menu()
-    if button == 'play':
+    if button == "play":
         human_play()
-    elif button == 'agent':
+    elif button == "agent":
         agent_play()
-    elif button == 'ranking':
-        ranking_list = scores_collection.find().sort("score", pymongo.DESCENDING).limit(5)
+    elif button == "ranking":
+        ranking_list = ranking.scores
         button = interface.ranking(ranking_list)
-        if button == 'reset':
-            scores_collection.delete_many({})
+        if button == "reset":
+            ranking.reset()
         run_menu()
-    elif button == 'settings':
+    elif button == "settings":
         button = interface.settings()
-        game.SPEED = config_game['level'][button]
+        game.SPEED = config_game["level"][button]
         run_menu()
-    elif button == 'exit':
+    elif button == "exit":
         exit()
 
-if __name__ == '__main__':
-    config = load_config()
-    config_game = config['game']
-    config_ranking = config['ranking']
-    config_agent = config['agent']
 
-    interface = Interface(width=config_game['screen_width'],
-                        height=config_game['screen_height'])
-                        
-    game = Snake(width=config_game['screen_width'], 
-                height=config_game['screen_height'],
-                BLOCK_SIZE=config_game['BLOCK_SIZE'],
-                SPEED=config_game['level']['medium'])
+if __name__ == "__main__":
+    config = open_json("config/config.json")
+    config_game = config["game"]
+    config_ranking = config["ranking"]
+    config_agent = config["agent"]
 
-    client = pymongo.MongoClient(config_ranking['adress']) 
-    database = client[config_ranking['database']]
-    scores_collection = database[config_ranking['collection']]
+    ranking = Ranking(
+        config_ranking["path"], config_ranking["max_size"]
+    )
+
+    interface = Interface(
+        width=config_game["screen_width"],
+        height=config_game["screen_height"]
+    )
+
+    game = Snake(
+        width=config_game["screen_width"],
+        height=config_game["screen_height"],
+        BLOCK_SIZE=config_game["BLOCK_SIZE"],
+        SPEED=config_game["level"]["medium"]
+    )
 
     run_menu()

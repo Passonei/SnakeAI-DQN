@@ -1,0 +1,16 @@
+{
+    "model_path": null,
+    "agent_hyperparams": {
+        "learning_rate": 0.001,
+        "epsilon": 0.9,
+        "epsilon_decay": 0.997,
+        "epsilon_min": 0.01,
+        "discount_rate": 0.9
+    },
+    "env_hyperparams": {
+        "max_games": 2,
+        "min_to_save": 60,
+        "training_bound": 20,
+        "n_steps": 1000
+    }
+}

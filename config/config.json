@@ -5,19 +5,18 @@
       "BLOCK_SIZE": 20,
       "SPEED": 20,
       "level": {
-        "easy":10,
-        "medium":20,
-        "hard":30
+        "easy": 10,
+        "medium": 20,
+        "hard": 30
       }
     },
     "ranking":{
-      "adress":"mongodb://localhost:27017/",
-      "database":"snake_db",
-      "collection":"ranking"
+      "path": "ranking/ranking.json",
+      "max_size": 5
     },
-    "agent":{
-      "path":"models/score67.h5",
-      "epsilon_train":0.9,
-      "epsilon_play":0.01
+    "agent": {
+      "path": "models/score67.h5",
+      "epsilon_train": 0.9,
+      "epsilon_play": 0.01
     }
 }
