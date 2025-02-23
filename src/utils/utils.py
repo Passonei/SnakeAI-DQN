@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 
@@ -14,6 +15,9 @@ def save_json(file_path, data):
 
 def logger_setup(level, app):
     """Set up the logger."""
+    if not os.path.exists("logs"):
+        os.makedirs("logs")
+
     level = getattr(logging, level)
 
     logging.basicConfig(
